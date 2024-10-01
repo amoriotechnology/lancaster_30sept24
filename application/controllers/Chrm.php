@@ -5645,20 +5645,25 @@ $data['setting_detail'] = $setting_detail;
     $content = $this->parser->parse('hr/federalunemployment_list', $data, true);
     $this->template->full_admin_html_view($content);
     }
- public function add_timesheet() {
+
+
+ public function add_timesheet() 
+ {
     $data['title'] = display('add_timesheet');
-        $CI = & get_instance();
-        $this->load->model('Hrm_model');
-        $CI->load->model('Web_settings');
-        $setting_detail = $CI->Web_settings->retrieve_setting_editdata();
-        $data['employee_name'] = $this->Hrm_model->employee_name1();
-         $data['payment_terms'] = $this->Hrm_model->get_payment_terms();
-         $data['setting_detail'] = $setting_detail;
-        $data['dailybreak'] = $this->Hrm_model->get_dailybreak();
-        $data['duration'] = $this->Hrm_model->get_duration_data();
-        $content = $this->parser->parse('hr/add_timesheet', $data, true);
-        $this->template->full_admin_html_view($content);
-        }
+    $CI = & get_instance();
+    $this->load->model('Hrm_model');
+    $CI->load->model('Web_settings');
+    $setting_detail = $CI->Web_settings->retrieve_setting_editdata();
+    $data['employee_name'] = $this->Hrm_model->employee_name1();
+    $data['payment_terms'] = $this->Hrm_model->get_payment_terms();
+    $data['setting_detail'] = $setting_detail;
+    $data['dailybreak'] = $this->Hrm_model->get_dailybreak();
+    $data['duration'] = $this->Hrm_model->get_duration_data();
+    $content = $this->parser->parse('hr/add_timesheet', $data, true);
+    $this->template->full_admin_html_view($content);
+}
+
+
         public function add_durat_info(){
             $CI = & get_instance();
             $CI->auth->check_admin_auth();
