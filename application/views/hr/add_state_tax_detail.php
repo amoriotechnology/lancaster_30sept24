@@ -172,9 +172,7 @@
                <br>
 
  
- <?php  if(!empty($weekly_taxinfo))   { ?>
-
-    
+   <?php  if(!empty($weekly_taxinfo))   { ?>
       <div class="  row">
          <div class="   col-sm-12" >
             <div class=" panel panel-default" style="border:3px solid #d7d4d6;margin-left: 15px;width: 1602px;" >
@@ -188,108 +186,180 @@
             </div>
          </div>
       </div>                
-
- 
       <div class="panel-body">
-                  <?php echo  form_open('Caccounts/create_tax_setup?type=weekly') ?>
-                  <input type="hidden" class="txt_csrfname" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
-                  <input type="hidden" name="tax_name" value="<?php echo $_GET['tax']; ?>"/>
-                  <table class="table table-bordered table-hover"   id="POITable11"  border="0">
-                     <thead> 
-                        <tr class="btnclr">
-                           <th rowspan="2" style="padding-bottom: 45px;"><?php echo display('sl') ?></th>
-                           <th rowspan="2" style="padding-bottom: 45px;">Employer%<strong><i class="text-danger">*</i></strong></th>
-                           <th rowspan="2" style="padding-bottom: 45px;">Employee%<strong><i class="text-danger">*</i></strong></th>
-                           <th rowspan="2" style="padding-bottom: 45px;">Details<strong><i class="text-danger">*</i></strong></th>
-                           <th colspan="2">Single<strong><i class="text-danger">*</i></strong></th>
-                           <th colspan="2">Tax filling jointly / Married<strong><i class="text-danger">*</i></strong></th>
-                           <th colspan="2">Married - file separately<strong><i class="text-danger">*</i></strong></th>
-                           <th colspan="2">Head of household<br>(single mom / father - have children)<strong><i class="text-danger">*</i></strong></th>
-                           <th rowspan="2" style="padding-bottom: 45px;"><?php echo display('delete') ?></th>
-                           <th rowspan="2" class="btnclr" style="padding-bottom: 45px;"><?php echo display('add_more') ?></th>
-                           <tr class="btnclr">
-                           <th>From</th>
-                           <th>To</th>
-                           <th>From</th>
-                           <th>To</th>
-                           <th>From</th>
-                           <th>To</th>
-                           <th>From</th>
-                           <th>To</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        <?php  $w=1; if($weekly_taxinfo){foreach ($weekly_taxinfo as $weeklytax) {  ?>
-                        <tr>
-                           <td><input  type="hidden" class="form-control" id="row_id11" value="<?php if($weeklytax['id']){ echo $weeklytax['id'];}else{echo "0";} ?>" /></td>
-                           <td class="paddin5ps" required><input  type="text" class="form-control" id="start_amount" value="<?php if($weeklytax['employer']){ echo $weeklytax['employer'];}else{echo "0";} ?>" name="employer[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="end_amount" value="<?php if($weeklytax['employee']){ echo $weeklytax['employee'];}else{echo "0";} ?>"  name="employee[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="details"  value="<?php if($weeklytax['details']){ echo $weeklytax['details'];}else{echo "0";} ?>" name="details[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="single_from" value="<?php if($weeklytax['single']){ $split=explode('-',$weeklytax['single']); if($split[0]){ echo $split[0];}else{echo "0";}} ?>"  name="single_from[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="single_to" value="<?php if($weeklytax['single']){ $split=explode('-',$weeklytax['single']); if($split[1]){ echo $split[1];}else{echo "0";}} ?>"  name="single_to[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="tax_filling_from" value="<?php if($weeklytax['tax_filling']){ $split=explode('-',$weeklytax['tax_filling']); if($split[0]){ echo $split[0];}else{echo "0";}} ?>"  name="tax_filling_from[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="tax_filling_to" value="<?php if($weeklytax['tax_filling']){ $split=explode('-',$weeklytax['tax_filling']); if($split[1]){ echo $split[1];}else{echo "0";}} ?>"  name="tax_filling_to[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="married_from" value="<?php if($weeklytax['married']){ $split=explode('-',$weeklytax['married']); if($split[0]){ echo $split[0];}else{echo "0";}} ?>"  name="married_from[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="married_to" value="<?php if($weeklytax['married']){ $split=explode('-',$weeklytax['married']); if($split[1]){ echo $split[1];}else{echo "0";}} ?>"  name="married_to[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="head_household_from" value="<?php if($weeklytax['head_household']){ $split=explode('-',$weeklytax['head_household']); if($split[0]){ echo $split[0];}else{echo "0";}} ?>"  name="head_household_from[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="head_household_to" value="<?php if($weeklytax['head_household']){ $split=explode('-',$weeklytax['head_household']); if($split[1]){ echo $split[1];}else{echo "0";}} ?>"  name="head_household_to[]"  required/></td>
-                           <td class="paddin5ps"><button type="button" id="delPOIbutton" class="btn btn-danger getDataRow11"  value="Delete" onclick="deleteTaxRow11(this)"><i class="fa fa-trash"></i></button></td>
-                           <td class="paddin5ps"><button type="button" id="addmorePOIbutton11" style="color:white;" class="btnclr btn"  value="Add More POIs" onclick="TaxinsRow11()"><i class="fa fa-plus-circle"></button></td>
-                        </tr>
-                        <?php $w++; }}else{  ?>
-                        <tr> 
-                           <td></td>
-                           <td class="paddin5ps" required><input  type="text" class="form-control" id="start_amount"  name="employer[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="end_amount"   name="employee[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="details[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="single_from[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="single_to[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="tax_filling_from[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="tax_filling_to[]"  required/></td>
-                           <td><input  type="text" class="form-control" id="rate"   name="married_from[]"  required/></td>
-                           <td><input  type="text" class="form-control" id="rate"   name="married_to[]"  required/></td>
-                           <td><input  type="text" class="form-control" id="rate"   name="head_household_from[]"  required/></td>
-                           <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="head_household_to[]"  required/></td>
-                           <td class="paddin5ps"><button type="button" id="delPOIbutton" class="btn btn-danger"  value="Delete" onclick="deleteTaxRow11(this)"><i class="fa fa-trash"></i></button></td>
-                           <td class="paddin5ps"><button type="button" id="addmorePOIbutton11" style="color:white;" class="btnclr btn" value="Add More POIs" onclick="TaxinsRow11()"><i class="fa fa-plus-circle"></button></td>
-                        </tr>
-                        <?php $w++; }   ?>
-                     </tbody>
-                  </table>
-                  <br>
-                  <div class="form-group text-center">
-                     <button type="submit" style="color:white; " class="btnclr btn w-md m-b-5"><?php echo display('setup') ?></button>
+         <?php echo  form_open('Caccounts/create_tax_setup?type=weekly') ?>
+         <input type="hidden" class="txt_csrfname" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+         <input type="hidden" name="tax_name" value="<?php echo $_GET['tax']; ?>"/>
+         <table class="table table-bordered table-hover"   id="POITable11"  border="0">
+            <thead> 
+               <tr class="btnclr">
+                  <th rowspan="2" style="padding-bottom: 45px;"><?php echo display('sl') ?></th>
+                  <th rowspan="2" style="padding-bottom: 45px;">Employer%<strong><i class="text-danger">*</i></strong></th>
+                  <th rowspan="2" style="padding-bottom: 45px;">Employee%<strong><i class="text-danger">*</i></strong></th>
+                  <th rowspan="2" style="padding-bottom: 45px;">Details<strong><i class="text-danger">*</i></strong></th>
+                  <th colspan="2">Single<strong><i class="text-danger">*</i></strong></th>
+                  <th colspan="2">Tax filling jointly / Married<strong><i class="text-danger">*</i></strong></th>
+                  <th colspan="2">Married - file separately<strong><i class="text-danger">*</i></strong></th>
+                  <th colspan="2">Head of household<br>(single mom / father - have children)<strong><i class="text-danger">*</i></strong></th>
+                  <th rowspan="2" style="padding-bottom: 45px;"><?php echo display('delete') ?></th>
+                  <th rowspan="2" class="btnclr" style="padding-bottom: 45px;"><?php echo display('add_more') ?></th>
+                  <tr class="btnclr">
+                  <th>From</th>
+                  <th>To</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>From</th>
+                  <th>To</th>
+               </tr>
+            </thead>
+            <tbody>
+               <?php  $w=1; if($weekly_taxinfo){foreach ($weekly_taxinfo as $weeklytax) {  ?>
+               <tr>
+                  <td><input  type="hidden" class="form-control" id="row_id11" value="<?php if($weeklytax['id']){ echo $weeklytax['id'];}else{echo "0";} ?>" /></td>
+                  <td class="paddin5ps" required><input  type="text" class="form-control" id="start_amount" value="<?php if($weeklytax['employer']){ echo $weeklytax['employer'];}else{echo "0";} ?>" name="employer[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="end_amount" value="<?php if($weeklytax['employee']){ echo $weeklytax['employee'];}else{echo "0";} ?>"  name="employee[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="details"  value="<?php if($weeklytax['details']){ echo $weeklytax['details'];}else{echo "0";} ?>" name="details[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="single_from" value="<?php if($weeklytax['single']){ $split=explode('-',$weeklytax['single']); if($split[0]){ echo $split[0];}else{echo "0";}} ?>"  name="single_from[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="single_to" value="<?php if($weeklytax['single']){ $split=explode('-',$weeklytax['single']); if($split[1]){ echo $split[1];}else{echo "0";}} ?>"  name="single_to[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="tax_filling_from" value="<?php if($weeklytax['tax_filling']){ $split=explode('-',$weeklytax['tax_filling']); if($split[0]){ echo $split[0];}else{echo "0";}} ?>"  name="tax_filling_from[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="tax_filling_to" value="<?php if($weeklytax['tax_filling']){ $split=explode('-',$weeklytax['tax_filling']); if($split[1]){ echo $split[1];}else{echo "0";}} ?>"  name="tax_filling_to[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="married_from" value="<?php if($weeklytax['married']){ $split=explode('-',$weeklytax['married']); if($split[0]){ echo $split[0];}else{echo "0";}} ?>"  name="married_from[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="married_to" value="<?php if($weeklytax['married']){ $split=explode('-',$weeklytax['married']); if($split[1]){ echo $split[1];}else{echo "0";}} ?>"  name="married_to[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="head_household_from" value="<?php if($weeklytax['head_household']){ $split=explode('-',$weeklytax['head_household']); if($split[0]){ echo $split[0];}else{echo "0";}} ?>"  name="head_household_from[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="head_household_to" value="<?php if($weeklytax['head_household']){ $split=explode('-',$weeklytax['head_household']); if($split[1]){ echo $split[1];}else{echo "0";}} ?>"  name="head_household_to[]"  required/></td>
+                  <td class="paddin5ps"><button type="button" id="delPOIbutton" class="btn btn-danger getDataRow11"  value="Delete" onclick="deleteTaxRow11(this)"><i class="fa fa-trash"></i></button></td>
+                  <td class="paddin5ps"><button type="button" id="addmorePOIbutton11" style="color:white;" class="btnclr btn"  value="Add More POIs" onclick="TaxinsRow11()"><i class="fa fa-plus-circle"></button></td>
+               </tr>
+               <?php $w++; }}else{  ?>
+               <tr> 
+                  <td></td>
+                  <td class="paddin5ps" required><input  type="text" class="form-control" id="start_amount"  name="employer[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="end_amount"   name="employee[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="details[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="single_from[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="single_to[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="tax_filling_from[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="tax_filling_to[]"  required/></td>
+                  <td><input  type="text" class="form-control" id="rate"   name="married_from[]"  required/></td>
+                  <td><input  type="text" class="form-control" id="rate"   name="married_to[]"  required/></td>
+                  <td><input  type="text" class="form-control" id="rate"   name="head_household_from[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="head_household_to[]"  required/></td>
+                  <td class="paddin5ps"><button type="button" id="delPOIbutton" class="btn btn-danger"  value="Delete" onclick="deleteTaxRow11(this)"><i class="fa fa-trash"></i></button></td>
+                  <td class="paddin5ps"><button type="button" id="addmorePOIbutton11" style="color:white;" class="btnclr btn" value="Add More POIs" onclick="TaxinsRow11()"><i class="fa fa-plus-circle"></button></td>
+               </tr>
+               <?php $w++; }   ?>
+            </tbody>
+         </table>
+         <br>
+         <div class="form-group text-center">
+            <button type="submit" style="color:white; " class="btnclr btn w-md m-b-5"><?php echo display('setup') ?></button>
+         </div>
+         <?php echo form_close() ?>
+      </div>
+
+      <?php  }  else {  ?>
+      <?php } ?>
+      <br>
+
+      <!-- Montly  -->
+      <?php  if(!empty($monthly_taxinfo))   { ?>
+      <div class="  row">
+         <div class="   col-sm-12" >
+            <div class=" panel panel-default" style="border:3px solid #d7d4d6;margin-left: 15px;width: 1602px;" >
+               <div class="panel-body btnclr ">
+                  <div class="row">
+                     <h3 class="col-sm-3" style="margin: 0;">MONTLY PAYROLL</h3>
+                     <div class="col-sm-9 text-right">                    
+                     </div>
                   </div>
-                  <?php echo form_close() ?>
                </div>
+            </div>
+         </div>
+      </div>                
+      <div class="panel-body">
+         <?php echo  form_open('Caccounts/create_tax_setup?type=monthly') ?>
+         <input type="hidden" class="txt_csrfname" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+         <input type="hidden" name="tax_name" value="<?php echo $_GET['tax']; ?>"/>
+         <table class="table table-bordered table-hover"   id="POITable11"  border="0">
+            <thead> 
+               <tr class="btnclr">
+                  <th rowspan="2" style="padding-bottom: 45px;"><?php echo display('sl') ?></th>
+                  <th rowspan="2" style="padding-bottom: 45px;">Employer%<strong><i class="text-danger">*</i></strong></th>
+                  <th rowspan="2" style="padding-bottom: 45px;">Employee%<strong><i class="text-danger">*</i></strong></th>
+                  <th rowspan="2" style="padding-bottom: 45px;">Details<strong><i class="text-danger">*</i></strong></th>
+                  <th colspan="2">Single<strong><i class="text-danger">*</i></strong></th>
+                  <th colspan="2">Tax filling jointly / Married<strong><i class="text-danger">*</i></strong></th>
+                  <th colspan="2">Married - file separately<strong><i class="text-danger">*</i></strong></th>
+                  <th colspan="2">Head of household<br>(single mom / father - have children)<strong><i class="text-danger">*</i></strong></th>
+                  <th rowspan="2" style="padding-bottom: 45px;"><?php echo display('delete') ?></th>
+                  <th rowspan="2" class="btnclr" style="padding-bottom: 45px;"><?php echo display('add_more') ?></th>
+                  <tr class="btnclr">
+                  <th>From</th>
+                  <th>To</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>From</th>
+                  <th>To</th>
+               </tr>
+            </thead>
+            <tbody>
+               <?php  $m=1; if($monthly_taxinfo){foreach ($monthly_taxinfo as $montlytax) {  ?>
+               <tr>
+                  <td><input  type="hidden" class="form-control" id="row_id11" value="<?php if($montlytax['id']){ echo $montlytax['id'];}else{echo "0";} ?>" /></td>
+                  <td class="paddin5ps" required><input  type="text" class="form-control" id="start_amount" value="<?php if($montlytax['employer']){ echo $montlytax['employer'];}else{echo "0";} ?>" name="employer[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="end_amount" value="<?php if($montlytax['employee']){ echo $montlytax['employee'];}else{echo "0";} ?>"  name="employee[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="details"  value="<?php if($montlytax['details']){ echo $montlytax['details'];}else{echo "0";} ?>" name="details[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="single_from" value="<?php if($montlytax['single']){ $split=explode('-',$montlytax['single']); if($split[0]){ echo $split[0];}else{echo "0";}} ?>"  name="single_from[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="single_to" value="<?php if($montlytax['single']){ $split=explode('-',$montlytax['single']); if($split[1]){ echo $split[1];}else{echo "0";}} ?>"  name="single_to[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="tax_filling_from" value="<?php if($montlytax['tax_filling']){ $split=explode('-',$montlytax['tax_filling']); if($split[0]){ echo $split[0];}else{echo "0";}} ?>"  name="tax_filling_from[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="tax_filling_to" value="<?php if($montlytax['tax_filling']){ $split=explode('-',$montlytax['tax_filling']); if($split[1]){ echo $split[1];}else{echo "0";}} ?>"  name="tax_filling_to[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="married_from" value="<?php if($montlytax['married']){ $split=explode('-',$montlytax['married']); if($split[0]){ echo $split[0];}else{echo "0";}} ?>"  name="married_from[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="married_to" value="<?php if($montlytax['married']){ $split=explode('-',$montlytax['married']); if($split[1]){ echo $split[1];}else{echo "0";}} ?>"  name="married_to[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="head_household_from" value="<?php if($montlytax['head_household']){ $split=explode('-',$montlytax['head_household']); if($split[0]){ echo $split[0];}else{echo "0";}} ?>"  name="head_household_from[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="head_household_to" value="<?php if($montlytax['head_household']){ $split=explode('-',$montlytax['head_household']); if($split[1]){ echo $split[1];}else{echo "0";}} ?>"  name="head_household_to[]"  required/></td>
+                  <td class="paddin5ps"><button type="button" id="delPOIbutton" class="btn btn-danger getDataRow11"  value="Delete" onclick="deleteTaxRow11(this)"><i class="fa fa-trash"></i></button></td>
+                  <td class="paddin5ps"><button type="button" id="addmorePOIbutton11" style="color:white;" class="btnclr btn"  value="Add More POIs" onclick="TaxinsRow11()"><i class="fa fa-plus-circle"></button></td>
+               </tr>
+               <?php $w++; }}else{  ?>
+               <tr> 
+                  <td></td>
+                  <td class="paddin5ps" required><input  type="text" class="form-control" id="start_amount"  name="employer[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="end_amount"   name="employee[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="details[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="single_from[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="single_to[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="tax_filling_from[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="tax_filling_to[]"  required/></td>
+                  <td><input  type="text" class="form-control" id="rate"   name="married_from[]"  required/></td>
+                  <td><input  type="text" class="form-control" id="rate"   name="married_to[]"  required/></td>
+                  <td><input  type="text" class="form-control" id="rate"   name="head_household_from[]"  required/></td>
+                  <td class="paddin5ps"><input  type="text" class="form-control" id="rate"   name="head_household_to[]"  required/></td>
+                  <td class="paddin5ps"><button type="button" id="delPOIbutton" class="btn btn-danger"  value="Delete" onclick="deleteTaxRow11(this)"><i class="fa fa-trash"></i></button></td>
+                  <td class="paddin5ps"><button type="button" id="addmorePOIbutton11" style="color:white;" class="btnclr btn" value="Add More POIs" onclick="TaxinsRow11()"><i class="fa fa-plus-circle"></button></td>
+               </tr>
+               <?php $m++; }   ?>
+            </tbody>
+         </table>
+         <br>
+         <div class="form-group text-center">
+            <button type="submit" style="color:white;" class="btnclr btn w-md m-b-5"><?php echo display('setup') ?></button>
+         </div>
+         <?php echo form_close() ?>
+      </div>
+
+      <?php  }  else {  ?>
+      <?php } ?>
+      <br>
+
  
 
-               <?php  }  else {  ?>
-     <!-- <div class="  row">
-     <div class="   col-sm-12" >
-        <div class=" panel panel-default" style="border:3px solid #d7d4d6;margin-left: 15px;width: 1602px;" >
-           <div class="panel-body btnclr ">
-              <div class="row">
-                 <h3 class="col-sm-3" style="margin: 0;">WEEKLY PAYROLL</h3>
-                 <div class="col-sm-9 text-right">                    
-                 </div>
-              </div>
-           </div>
-        </div>
-     </div>
-  </div>          -->
-   <?php } ?>
-
-  
-               <br>
-
- 
-
  
  
-               <?php  if(trim($taxinfo[0]['tax']) == trim($trimmed_tax_bi))   { ?>
-
-
+<?php  if(trim($taxinfo[0]['tax']) == trim($trimmed_tax_bi))   { ?>
 <div class="row">
    <div class="col-sm-12">
       <div class="panel panel-default" style="border:3px solid #d7d4d6;margin-left:15px;width:1602px;" >

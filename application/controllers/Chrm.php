@@ -5590,12 +5590,9 @@ $data['setting_detail'] = $setting_detail;
     ->result_array();
     // $monthly_tax = 'Monthly';
     // $data['trimmed_tax_monly']    = str_replace($monthly_tax, '', $get_tax_name_monthly[0]['tax']);
-    $data['monthly_taxinfo'] = $this->db->select("*")
-    ->from('monthly_tax_info')
-    ->where('tax', $get_tax_name_monthly[0]['tax'] )
-    ->where('create_by',$this->session->userdata('user_id') )
-    ->get()
-    ->result_array();
+    $data['monthly_taxinfo'] = $this->db->select("*")->from('monthly_tax_info')->where('tax', $get_tax_name_monthly[0]['tax'] )->where('create_by',$this->session->userdata('user_id'))->get()->result_array();
+    
+    // print_r($data['monthly_taxinfo']); die;
     $data['title'] = display('add_taxes_detail');
     $content = $this->parser->parse('hr/add_state_tax_detail', $data, true);
     $this->template->full_admin_html_view($content);
