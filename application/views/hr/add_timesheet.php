@@ -743,6 +743,8 @@ let day = ("0" + newDate.getDate()).slice(-2);
 let month = ("0" + (newDate.getMonth() + 1)).slice(-2); 
 let dateString = `${day}/${month}/${newDate.getFullYear()}`;
     if (response.includes('salary') || response.includes('Salaried-weekly') || response.includes('Salaried-BiWeekly') || response.includes('Salaried-Monthly')  || response.includes('Salaried-BiMonthly'  )) {
+        var presentCount = $('input[type="checkbox"].present:checked').length + 1;
+        $('#total_net').val(presentCount);
         $('#tBody').append(`
             <tr>
                 <td class="date" id="date_${i}">
@@ -755,7 +757,7 @@ let dateString = `${day}/${month}/${newDate.getFullYear()}`;
                 <td style="display:none;"  class="finish-time_`+i+`">   <input    id="finishTime${monStartWeekDays[i]}"   name="end[]" class="hasTimepicker end"   type="time"   /></td> 
                  <td class="hours-worked_`+i+`"> 
                  <label class="switch" style="width:100px;">
-                <input type="checkbox" class="present checkbox switch-input"  value=""  id="blockcheck_`+i+`" name="present[]">
+                <input type="checkbox" class="present checkbox switch-input"  value=""  id="blockcheck_`+i+`" name="present[]" checked>
                 <span class="switch-label" data-on="Present" data-off="Absent"></span>
                 <span class="switch-handle"></span>
                 </label>
@@ -886,14 +888,7 @@ $('.table').each(function () {
     total_netH += tableHours;
     total_netM += tableMinutes;
 });
-/*alert('total_net:'+total_netH+'.'+total_netM);
-// Convert the total back to hours and minutes format
-var hours = Math.floor(total_net);
-var minutes = Math.round((total_net % 1) * 100); // Multiply by 100 to get the minutes
-if (minutes === 100) {
-    hours += 1;
-    minutes = 0;
-}*/
+
 var timeConvertion = convertToTime(total_netH,total_netM);
 $('#total_net').val(timeConvertion).trigger('change');
 });
