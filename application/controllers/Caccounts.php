@@ -282,6 +282,81 @@ if ($this->db->field_exists($txd, 'quotation_taxinfo')) {
 
     // ================ Income tax entry   ======
    
+<<<<<<< HEAD
+public function create_tax_setup() {
+    $type = $this->input->get('type'); // Use input->get for better security and readability
+    $tname = $this->input->post('tax_name', TRUE);
+    $tax_name = str_replace("_", " ", $tname);
+    $year = date("Y");
+    
+    // Collect data from input
+    $start_amount = $this->input->post('employer', TRUE);
+    $end_amount = $this->input->post('employee', TRUE);
+    $details = $this->input->post('details', TRUE);
+    $single_from = $this->input->post('single_from', TRUE);
+    $single_to = $this->input->post('single_to', TRUE);
+    $tax_filling_from = $this->input->post('tax_filling_from', TRUE);
+    $tax_filling_to = $this->input->post('tax_filling_to', TRUE);
+    $married_from = $this->input->post('married_from', TRUE);
+    $married_to = $this->input->post('married_to', TRUE);
+    $head_household_from = $this->input->post('head_household_from', TRUE);
+    $head_household_to = $this->input->post('head_household_to', TRUE);
+
+    // Prepare to delete existing records based on the type
+    $this->db->where('tax', $tax_name);
+    switch ($type) {
+        case 'hourly':
+            $this->db->delete('state_localtax');
+            break;
+        case 'weekly':
+            $this->db->delete('weekly_tax_info');
+            break;
+        case 'biweekly':
+            $this->db->delete('biweekly_tax_info');
+            break;
+        case 'monthly':
+            $this->db->delete('monthly_tax_info');
+            break;
+    }
+
+    // Insert new tax setup data
+    for ($i = 0, $n = count($details); $i < $n; $i++) {
+        $data1 = array(
+            'year' => $year,
+            'employer' => $start_amount[$i],
+            'employee' => $end_amount[$i],
+            'details' => $details[$i],
+            'single' => $single_from[$i] . "-" . $single_to[$i],
+            'tax_filling' => $tax_filling_from[$i] . "-" . $tax_filling_to[$i],
+            'married' => $married_from[$i] . "-" . $married_to[$i],
+            'head_household' => $head_household_from[$i] . "-" . $head_household_to[$i],
+            'tax' => ($type == 'hourly' ? 'hourly ' : ($type == 'weekly' ? 'weekly ' : ($type == 'biweekly' ? 'biweekly ' : 'monthly '))) . $tax_name,
+            'create_by' => $this->session->userdata('user_id')
+        );
+
+        switch ($type) {
+            case 'hourly':
+                $this->db->insert('state_localtax', $data1);
+                break;
+            case 'weekly':
+                $this->db->insert('weekly_tax_info', $data1);
+                break;
+            case 'biweekly':
+                $this->db->insert('biweekly_tax_info', $data1);
+                break;
+            case 'monthly':
+                $this->db->insert('monthly_tax_info', $data1);
+                break;
+        }
+    }
+
+    // Flash message and redirect
+    $this->session->set_flashdata('message', display('save_successfully'));
+    redirect("Chrm/payroll_setting");
+}
+
+
+=======
     public function create_tax_setup(){
         $type=$_GET['type'];
      
@@ -364,6 +439,7 @@ if ($this->db->field_exists($txd, 'quotation_taxinfo')) {
                 redirect("Chrm/payroll_setting");
             }
     }
+>>>>>>> eddf562101a002bee53b8d1884fade261110dbbc
     
     
     public function delete_row()
