@@ -172,7 +172,7 @@
                <br>
 
  
- <?php  if(trim($taxinfo[0]['tax']) == trim($trimmed_tax))   { ?>
+ <?php  if(!empty($weekly_taxinfo))   { ?>
 
     
       <div class="  row">

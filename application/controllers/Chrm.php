@@ -5554,6 +5554,7 @@ $data['setting_detail'] = $setting_detail;
      ->where('tax',$query['tax'])
      ->where('create_by',$this->session->userdata('user_id') )
      ->get()->result_array();
+ 
       $get_tax_name = $this->db->select("tax")
         ->from('weekly_tax_info')
         ->where('tax',$query['tax'])
@@ -5561,8 +5562,7 @@ $data['setting_detail'] = $setting_detail;
         ->get()
         ->result_array();
       
-    //  $weekly_tax = 'Weekly';
-    //  $data['trimmed_tax']    = str_replace($weekly_tax, '', $get_tax_name[0]['tax']);
+  
     $data['weekly_taxinfo'] = $this->db->select("*")
     ->from('weekly_tax_info')
     ->where('tax', $get_tax_name[0]['tax'] )
