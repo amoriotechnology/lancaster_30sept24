@@ -400,7 +400,7 @@ padding:0px;
 <option value="2">Employee Name</option>
 <option value="3">Job title</option>
 <option value="6">Payroll Type</option>
-<option value="7">month</option>
+<option value="7">Date Range</option>
 <option value="8">Payslip Status</option>
                   
                         </select> 
@@ -448,7 +448,7 @@ padding:0px;
 <th class="5 value"  data-col="5"  data-resizable-column-id="5"   >Daily Break</th> -->
 
 <th class="6 value"  data-col="6"  data-resizable-column-id="6" >Payroll Type</th>
-<th class="7 value"  data-col="7"  data-resizable-column-id="7">month</th>
+<th class="7 value"  data-col="7"  data-resizable-column-id="7">Date Range</th>
 <th class="8 value"  data-col="8"  data-resizable-column-id="8">Payslip Status</th>
 <th class="9 value"  data-col="9"  data-resizable-column-id="9">Action</th>
 
@@ -569,7 +569,7 @@ if ($timesheet_list) {
              <!-- <br><input type="checkbox"  data-control-column="2" class="2" value="2"/>&nbsp;Employee Name<br> -->
             <!-- <br><input type="checkbox"  data-control-column="3" class="3 " value="3  "/>&nbsp;Job title <br> -->
             <!-- <br><input type="checkbox"  data-control-column="4" class="4" value="4"/>&nbsp;Duration<br> -->
-            <br><input type="checkbox"  data-control-column="7"    class="7" value="7"/>&nbsp;Month<br>                 
+            <br><input type="checkbox"  data-control-column="7"    class="7" value="7"/>&nbsp;Date Range<br>                 
 
            
          </div>
