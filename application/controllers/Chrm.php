@@ -992,6 +992,8 @@ public function hand_book(){
          $this->template->full_admin_html_view($content);
 }
 
+
+// Second Payslip Start
 public function second_pay_slip() {
           $CI = & get_instance();
           $CI->load->model('invoice_content');
@@ -3164,17 +3166,7 @@ $data['job_title']='Sales Partner';
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
+// Second Payslip End
 
 
 public function checkTimesheet() {
@@ -3192,13 +3184,6 @@ public function checkTimesheet() {
             echo 'No timesheet found for this date and employee';
         }
     }
-
-
-
-
-
-
-
 
 
 
@@ -5576,7 +5561,7 @@ $data['setting_detail'] = $setting_detail;
  $data['monthly_taxinfo'] = $this->db->select("*")
     ->from('monthly_tax_info')
     ->where('tax', $query['tax'])
-    ->where('create_by',$this->session->userdata('user_id') )
+    ->where('create_by',$this->session->userdata('user_id'))
     ->get()
     ->result_array();
 
