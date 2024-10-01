@@ -2670,6 +2670,83 @@ public function biweekly_tax_info($employee_status,$final,$biweekly_range){
     }
      return true;
 }
+public function getPaginatedpayslip($limit, $offset, $orderField, $orderDirection, $search, $date = null, $emp_name = 'All')
+    {
+        $this->db->select('a.*,b.*,c.*');
+        if ($date) {
+            $dates = explode(' to ', $date);
+            $start_date = $dates[0];
+            $end_date = $dates[1];
+            $subquery .= " AND (a.cheque_date BETWEEN '$start_date' AND '$end_date')";
+        }
+        if ($emp_name !== 'All') {
+            $trimmed_emp_name = trim($emp_name);
+            $subquery .= " AND (TRIM(CONCAT_WS(' ', b.first_name, b.middle_name, b.last_name)) LIKE '%$trimmed_emp_name%' OR TRIM(CONCAT_WS(' ', b.first_name, b.last_name)) LIKE '%$trimmed_emp_name%')";
+        }
+        $this->db->from('timesheet_info a');
+        $this->db->join('employee_history b' , 'a.templ_name = b.id');
+        $this->db->join('tax_history c' , 'c.time_sheet_id  = a.timesheet_id');
+         $this->db->group_by('c.time_sheet_id');
+         if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like("a.timesheet_id", $search);
+            $this->db->or_like("b.first_name", $search);
+            $this->db->or_like("b.last_name", $search);
+            $this->db->or_like("b.middle_name", $search);
+            $this->db->or_like("b.employee_tax", $search);
+            $this->db->group_end();
+        }
+        $this->db->where('a.uneditable', '1');
+        $this->db->where('a.create_by',$this->session->userdata('user_id'));
+        if($_SESSION['u_type'] ==3){
+            $this->db->where('a.unique_id',$this->session->userdata('unique_id'));
+        }
+        $this->db->limit($limit, $offset);
+        $this->db->order_by($orderField, $orderDirection);
+        $query = $this->db->get();
+        if ($query === false) {
+            return false;
+        }
+        return $query->result_array();
+    }
+    // Total Paysilp
+    public function getTotalpayslip($search, $date, $emp_name = 'All')
+    {
+        $this->db->select('a.*,b.*,c.*');
+        if ($date) {
+            $dates = explode(' to ', $date);
+            $start_date = $dates[0];
+            $end_date = $dates[1];
+            $subquery .= " AND (a.cheque_date BETWEEN '$start_date' AND '$end_date')";
+        }
+        if ($emp_name !== 'All') {
+            $trimmed_emp_name = trim($emp_name);
+            $subquery .= " AND (TRIM(CONCAT_WS(' ', b.first_name, b.middle_name, b.last_name)) LIKE '%$trimmed_emp_name%' OR TRIM(CONCAT_WS(' ', b.first_name, b.last_name)) LIKE '%$trimmed_emp_name%')";
+        }
+        $this->db->from('timesheet_info a');
+        $this->db->join('employee_history b' , 'a.templ_name = b.id');
+        $this->db->join('tax_history c' , 'c.time_sheet_id  = a.timesheet_id');
+         $this->db->group_by('c.time_sheet_id');
+         if (!empty($search)) {
+            $this->db->group_start();
+            $this->db->like("a.timesheet_id", $search);
+            $this->db->or_like("b.first_name", $search);
+            $this->db->or_like("b.last_name", $search);
+            $this->db->or_like("b.middle_name", $search);
+            $this->db->or_like("b.employee_tax", $search);
+            $this->db->group_end();
+        }
+        $this->db->where('a.uneditable', '1');
+        $this->db->where('a.create_by',$this->session->userdata('user_id'));
+        if($_SESSION['u_type'] ==3) {
+            $this->db->where('a.unique_id',$this->session->userdata('unique_id'));
+        }
+        $query = $this->db->get();
+        if ($query === false) {
+            return false;
+        }
+        return $query->num_rows();
+    }
 public function monthly_tax_info($employee_status,$final,$monthly_range){
     $user_id = $this->session->userdata('user_id');
     $this->db->select('employee,employer,details');
