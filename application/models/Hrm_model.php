@@ -833,7 +833,7 @@ public function federal_tax_report($emp_name = null, $date = null, $status = nul
 public function so_tax_report_employee($employee_name = null, $date = null, $status = null)
 {
     $user_id = $this->session->userdata('user_id');
-    $this->db->select('c.first_name, c.middle_name, c.last_name, c.employee_tax, ti.cheque_date');
+    $this->db->select('c.id,c.first_name, c.middle_name, c.last_name, c.employee_tax, ti.cheque_date');
     $this->db->select('(b.f_tax) AS fftax');
     $this->db->select('(b.m_tax) AS mmtax');
     $this->db->select('(b.s_tax) AS sstax');
@@ -844,7 +844,7 @@ public function so_tax_report_employee($employee_name = null, $date = null, $sta
     if ($date) {
         $dates = explode(' to ', $date);
         $start_date = $dates[0];
-        $end_date =$dates[1];  
+        $end_date =$dates[1];
         $this->db->where('ti.cheque_date >=', $start_date);
         $this->db->where('ti.cheque_date <=', $end_date);
     }
@@ -854,16 +854,19 @@ public function so_tax_report_employee($employee_name = null, $date = null, $sta
     }
     $this->db->where('ti.create_by', $user_id);
     $this->db->where('ti.uneditable', '1');
+    $this->db->order_by('c.id', 'ASC');
     $query = $this->db->get();
+    //echo $this->db->last_query();
     if ($query->num_rows() > 0) {
         return $query->result_array();
     }
     return false;
 }
+
 public function so_tax_report_employer($emp_name = null, $date = null, $status = null)
 {
     $user_id = $this->session->userdata('user_id');
-    $this->db->select('c.first_name, c.middle_name, c.last_name, c.employee_tax,ti.cheque_date');
+    $this->db->select('c.first_name, c.middle_name, c.last_name ,c.id, c.employee_tax,ti.cheque_date');
     $this->db->select('(b.f_tax) AS fftax');
     $this->db->select('(b.m_tax) AS mmtax');
     $this->db->select('(b.s_tax) AS sstax');
@@ -874,7 +877,7 @@ public function so_tax_report_employer($emp_name = null, $date = null, $status =
     if ($date) {
         $dates = explode(' to ', $date);
         $start_date = $dates[0];
-        $end_date =$dates[1];  
+        $end_date =$dates[1];
         $this->db->where('ti.cheque_date >=', $start_date);
         $this->db->where('ti.cheque_date <=', $end_date);
     }
@@ -884,13 +887,19 @@ public function so_tax_report_employer($emp_name = null, $date = null, $status =
     }
     $this->db->where('ti.uneditable', '1');
     $this->db->where('ti.create_by', $user_id);
-    $this->db->group_by('c.first_name, c.middle_name, c.last_name, c.employee_tax,ti.start,ti.end');
+     $this->db->order_by('c.id', 'ASC');
+    $this->db->group_by('c.id,c.first_name, c.middle_name, c.last_name, c.employee_tax,ti.start,ti.end,b.f_tax,b.m_tax,b.s_tax,b.u_tax,ti.cheque_date');
+    
      $query = $this->db->get();
+    //echo $this->db->last_query();die();
      if ($query->num_rows() > 0) {
         return $query->result_array();
     }
     return false;
 }
+
+
+
 public function federal_tax()
 {
     $user_id = $this->session->userdata('user_id');
@@ -2739,7 +2748,7 @@ public function get_taxname_living_weekly($lst_name){
     $this->db->select('tax');
     $this->db->from('weekly_tax_info');
     $this->db->where('create_by', $user_id); 
-    $this->db->like('tax', $lst_name); 
+    $this->db->like('tax', 'Weekly '.$lst_name, 'after'); 
     $query = $this->db->get();
     if ($query->num_rows() > 0) {
         return $query->result_array();
