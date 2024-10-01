@@ -992,7 +992,10 @@ public function hand_book(){
          $this->template->full_admin_html_view($content);
 }
 
+
+// Second Payslip Start
 public function second_pay_slip() {
+    // print_r($this->input->post()); die;
           $CI = & get_instance();
           $CI->load->model('invoice_content');
           $w = & get_instance();
@@ -1156,7 +1159,14 @@ if ($total_hours <= 14) {
    $final = ($hrate * $total_hours) + $scValueAmount1;
  
 }else if ($data['timesheet_data'][0]['payroll_type']=='Salaried-Monthly'){
-if ($total_hours <= 30) {
+
+// Get the current month and year
+$current_month = date('m');
+$current_year = date('Y');
+
+$days_in_month = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
+
+if ($total_hours <= $days_in_month) {
   $final = ($hrate * $total_hours) + $scValueAmount1;
  } else {
   $final = $data['timesheet_data'][0]['extra_thisrate'] + $data['timesheet_data'][0]['above_extra_sum'];
@@ -3154,17 +3164,7 @@ $data['job_title']='Sales Partner';
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
+// Second Payslip End
 
 
 public function checkTimesheet() {
@@ -3182,13 +3182,6 @@ public function checkTimesheet() {
             echo 'No timesheet found for this date and employee';
         }
     }
-
-
-
-
-
-
-
 
 
 
@@ -4822,7 +4815,11 @@ if ($total_hours <= 7) {
   //////  echo "Else : ".$final;
 }
 }else if ($data['timesheet_data'][0]['payroll_type']=='Salaried-Monthly'){
-if ($total_hours <= 30) {
+// Get the current month and year
+$current_month = date('m');
+$current_year = date('Y');
+$days_in_month = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
+if ($total_hours <= $days_in_month) {
   $final = ($hrate * $total_hours) + $scValueAmount1;
   //echo "IF : ".$final;
 } else {
@@ -5573,7 +5570,8 @@ $data['setting_detail'] = $setting_detail;
     ->result_array();
     $get_tax_name_monthly = $this->db->select("tax")
     ->from('monthly_tax_info')
-    ->where('create_by',$this->session->userdata('user_id') )
+    ->where('tax', $query['tax'])
+    ->where('create_by',$this->session->userdata('user_id'))
     ->get()
     ->result_array();
     $monthly_tax = 'Monthly';
@@ -5584,6 +5582,7 @@ $data['setting_detail'] = $setting_detail;
     ->where('create_by',$this->session->userdata('user_id') )
     ->get()
     ->result_array();
+
     $data['title'] = display('add_taxes_detail');
     $content = $this->parser->parse('hr/add_state_tax_detail', $data, true);
     $this->template->full_admin_html_view($content);
