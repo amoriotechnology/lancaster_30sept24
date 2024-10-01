@@ -5561,30 +5561,21 @@ $data['setting_detail'] = $setting_detail;
         ->where('create_by',$this->session->userdata('user_id') )
         ->get()
         ->result_array();
-      
-  
     $data['weekly_taxinfo'] = $this->db->select("*")
     ->from('weekly_tax_info')
     ->where('tax', $get_tax_name[0]['tax'] )
     ->where('create_by',$this->session->userdata('user_id') )
     ->get()
     ->result_array();
-    
-    $get_tax_name_biweekly = $this->db->select("tax")
-    ->from('biweekly_tax_info')
-    ->where('create_by',$this->session->userdata('user_id') )
-    ->get()
-    ->result_array();
-    // $biweekly_tax = 'BIWeekly';
-    // $data['trimmed_tax_bi']    = str_replace($biweekly_tax, '', $get_tax_name_biweekly[0]['tax']);
     $data['biweekly_taxinfo'] = $this->db->select("*")
     ->from('biweekly_tax_info')
-    ->where('tax', $get_tax_name_biweekly[0]['tax'] )
+    ->where('tax', $query['tax'] )
     ->where('create_by',$this->session->userdata('user_id') )
     ->get()
     ->result_array();
-    $get_tax_name_monthly = $this->db->select("tax")
+ $data['monthly_taxinfo'] = $this->db->select("*")
     ->from('monthly_tax_info')
+<<<<<<< HEAD
     ->where('create_by',$this->session->userdata('user_id') )
     ->get()
     ->result_array();
@@ -5593,10 +5584,16 @@ $data['setting_detail'] = $setting_detail;
     $data['monthly_taxinfo'] = $this->db->select("*")->from('monthly_tax_info')->where('tax', $get_tax_name_monthly[0]['tax'] )->where('create_by',$this->session->userdata('user_id'))->get()->result_array();
     
     // print_r($data['monthly_taxinfo']); die;
+=======
+    ->where('tax', $query['tax'])
+    ->where('create_by',$this->session->userdata('user_id') )
+    ->get()
+    ->result_array();
+>>>>>>> be0951f5935bdf36be32ff29049b3023a59c5de0
     $data['title'] = display('add_taxes_detail');
     $content = $this->parser->parse('hr/add_state_tax_detail', $data, true);
     $this->template->full_admin_html_view($content);
-    // echo json_encode($data);
+
     }
    public function add_taxes_detail() {
        $CI = & get_instance();
@@ -5605,9 +5602,7 @@ $data['setting_detail'] = $setting_detail;
 $data['setting_detail'] = $setting_detail;
      $tax = $this->input->post('tax');
     $data['taxinfo'] = $this->db->select("*")->from('federal_tax')->where('tax','Federal Income tax')->where('created_by',$this->session->userdata('user_id'))->get()->result_array();
-    // $data['taxinfo'] = $this->db->select("*")->from('federal_tax')->where('tax',$tax)->get()->result_array();
-    // print_r($data['taxinfo']); .;
-    // echo $this->db->last_query(); .;
+  
     $data['title'] = display('add_taxes_detail');
     $content = $this->parser->parse('hr/add_taxes_detail', $data, true);
     $this->template->full_admin_html_view($content);
