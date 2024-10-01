@@ -995,6 +995,7 @@ public function hand_book(){
 
 // Second Payslip Start
 public function second_pay_slip() {
+    // print_r($this->input->post()); die;
           $CI = & get_instance();
           $CI->load->model('invoice_content');
           $w = & get_instance();
@@ -1130,6 +1131,7 @@ $data_timesheet['quarter'] = $quarter;
             $time_end1 = $this->input->post('end');
             $hours_per_day1 = $this->input->post('sum');
             $daily_bk1=$this->input->post('dailybreak');
+            $present1 = $this->input->post('block');
             $purchase_id_1 = $this->db->where('templ_name', $this->input->post('templ_name'))->where('timesheet_id', $data_timesheet['timesheet_id']);
             $q=$this->db->get('timesheet_info');
              $row = $q->row_array();
@@ -1162,7 +1164,14 @@ if ($total_hours <= 14) {
    $final = ($hrate * $total_hours) + $scValueAmount1;
  
 }else if ($data['timesheet_data'][0]['payroll_type']=='Salaried-Monthly'){
-if ($total_hours <= 30) {
+
+// Get the current month and year
+$current_month = date('m');
+$current_year = date('Y');
+
+$days_in_month = cal_days_in_month(CAL_GREGORIAN, $current_month, $current_year);
+
+if ($total_hours <= $days_in_month) {
   $final = ($hrate * $total_hours) + $scValueAmount1;
  } else {
   $final = $data['timesheet_data'][0]['extra_thisrate'] + $data['timesheet_data'][0]['above_extra_sum'];
@@ -1184,10 +1193,11 @@ else {
         for ($i = 0, $n = count($date1); $i < $n; $i++) {
            $date = $date1[$i];
            $day = $day1[$i];
-            $daily_bk = $daily_bk1[$i];
+           $daily_bk = $daily_bk1[$i];
            $time_start = $time_start1[$i];
            $time_end = $time_end1[$i];
            $hours_per_day = $hours_per_day1[$i];
+           $present =  $present1[$i];
            $data1 = array(
              'timesheet_id' =>$this->session->userdata("timesheet_id_new"),
                'Date'    => $date,
@@ -1196,6 +1206,7 @@ else {
                'time_start'  => $time_start,
                'time_end'   =>  $time_end,
                'hours_per_day' => $hours_per_day,
+               'present'    => $present,
                'created_by' => $this->session->userdata('user_id')
        );
           $this->db->insert('timesheet_info_details', $data1);
