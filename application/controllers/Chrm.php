@@ -1825,9 +1825,12 @@ if(isset($split[2])) {
            'amount' => round($v,3),
        'time_sheet_id'   => $timesheetdata[0]['timesheet_id'],
        'employee_id'     => $timesheetdata[0]['templ_name'],
-       'created_by'     => $this->session->userdata('user_id'),
+       // 'month'          => $timesheetdata[0]['month'],
+        'created_by'     => $this->session->userdata('user_id'),
       );
     $this->db->insert('tax_history',$data1);
+    // echo "<br/>";
+    // print_r($data1);echo "<br/>";
    }
   }
   $sql = "DELETE t1
@@ -1842,6 +1845,7 @@ if(isset($split[2])) {
     AND t1.monthly IS NULL
     AND t1.biweekly IS NULL;
         ";
+// Execute the SQL query
 $this->db->query($sql);
  }
  if($data['employee_data'][0]['payroll_type'] == 'Hourly'){
@@ -1852,7 +1856,8 @@ $this->db->query($sql);
   $query = "SELECT `$emp_tax`
   FROM `state_localtax`
   WHERE `tax` = 'Pennsylvania-Income tax - PS'
- AND CAST(SUBSTRING_INDEX(`$emp_tax`, '-', 1) AS UNSIGNED) <= ?
+  -- WHERE `tax` = '" . $data['tax_name'][0]['tax'] . "'
+  AND CAST(SUBSTRING_INDEX(`$emp_tax`, '-', 1) AS UNSIGNED) <= ?
   AND CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`$emp_tax`, '-', -1), '-', 1) AS UNSIGNED) >= ?";
   $result = $this->db->query($query, array($maxValue, $minValue));
   if ($result) {
@@ -1920,20 +1925,31 @@ $this->db->query($sql);
 }
 }
 else if($data['employee_data'][0]['payroll_type'] == 'Salaried-weekly') {
-  $data['tax_name'] = $this->Hrm_model->get_taxname_weekly();
-  $query = "SELECT `single` FROM `weekly_tax_info` WHERE `tax` = '" . $data['tax_name'][0]['tax'] . "'
-    AND CAST(SUBSTRING_INDEX(`single`, '-', 1) AS UNSIGNED) <= $final
-    AND CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`single`, '-', -1), '-', 1) AS UNSIGNED) >= $final";
-   $weekly_tax = $this->db->query($query)->result_array();
+    $minValue = $final; // Example minimum value of your range
+    $maxValue = $final; // Example maximum value of your range
+   $data['tax_name'] = $this->Hrm_model->get_taxname_weekly();
+
+    $query = "SELECT `single`
+    FROM `weekly_tax_info`
+    WHERE `tax` = '" . $data['tax_name'][0]['tax'] . "'
+    AND CAST(SUBSTRING_INDEX(`single`, '-', 1) AS UNSIGNED) <= $maxValue
+    AND CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`single`, '-', -1), '-', 1) AS UNSIGNED) >= $minValue";
+$weekly_tax = $this->db->query($query)->result_array();
+// echo $this->db->last_query();
+   $weekly_range  = $weekly_tax[0]['single'];
    $split_values = explode('-', $weekly_range);
-   $getvalue = $final - $split_values[0];
-   $data['weekly'] = $this->Hrm_model->weekly_tax_info($data['employee_data'][0]['employee_tax'],$final,$weekly_tax[0]['single']);
+   $firstValue = $split_values[0];  
+   $secondValue = $split_values[1];  
+   $getvalue = $minValue - $firstValue;
+   $w_tax='';
+   $data['weekly'] = $this->Hrm_model->weekly_tax_info($data['employee_data'][0]['employee_tax'],$final,$weekly_range);
    if(!empty($data['weekly'][0]['employee'])){
     $weekly_employee_details= $data['weekly'][0]['details'];
     $addamt = explode('$', $weekly_employee_details);
+    // print_r($addamt);  
     $weekly_employee= $data['weekly'][0]['employee'];
     $wkly=($weekly_employee/100)*$getvalue;
-    $wkly= round($wkly);
+    $wkly= round($wkly, 2);
     $weekly_tax= $addamt[1] + $wkly; 
   }
   $data1 = array(
@@ -1996,7 +2012,7 @@ $biweekly_range  = $biweekly_tax[0]['single'];
  $firstValue = $split_values[0];  
  $secondValue = $split_values[1];  
  $getvalue = $minValue - $firstValue;
- 
+ $w_tax='';
  $data['biweekly'] = $this->Hrm_model->biweekly_tax_info($data['employee_data'][0]['employee_tax'],$final,$biweekly_range);
  if(!empty($data['biweekly'][0]['employee'])){
   $biweekly_employee_details= $data['biweekly'][0]['details'];
@@ -2065,7 +2081,7 @@ $this->db->query($sql);
    $firstValue = $split_values[0];  
    $secondValue = $split_values[1];  
    $getvalue = $minValue - $firstValue;
-   
+   $w_tax='';
    $data['monthly'] = $this->Hrm_model->monthly_tax_info($data['employee_data'][0]['employee_tax'],$final,$monthly_range);
    if(!empty($data['monthly'][0]['employee'])){
     $monthy_employee_details= $data['monthly'][0]['details'];
@@ -2270,7 +2286,9 @@ if($data['employee_data'][0]['payroll_type'] == 'Hourly'){
 }
 }
 } else if($data['employee_data'][0]['payroll_type'] == 'Salaried-weekly') {
- $lst_name = $data['employee_data'][0]['living_state_tax'];
+  $minValue = $final; // Example minimum value of your range
+  $maxValue = $final; // Example maximum value of your range
+  $lst_name = $data['employee_data'][0]['living_state_tax'];
   $data['tax_name'] = $this->Hrm_model->get_taxname_living_weekly($lst_name);
   $emp_tax = $data['employee_data'][0]['employee_tax'];
   $query = "SELECT `$emp_tax`
@@ -2278,19 +2296,26 @@ if($data['employee_data'][0]['payroll_type'] == 'Hourly'){
   WHERE `tax` = '" . $data['tax_name'][0]['tax'] . "'
   AND CAST(SUBSTRING_INDEX(`$emp_tax`, '-', 1) AS UNSIGNED) <= ?
   AND CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(`$emp_tax`, '-', -1), '-', 1) AS UNSIGNED) >= ?";
-  $result = $this->db->query($query, array($final, $final));
-  if ($result->result_array()) {
+  $result = $this->db->query($query, array($maxValue, $minValue));
+  // print_r($result ); die();
+  if ($result) {
    $weekly_tax = $result->result_array();
    if (!empty($weekly_tax)) {
-   $split_values = explode('-', $weekly_tax[0][$emp_tax]);
-   $getvalue = $minValue - $split_values[0];
-  $data['weekly'] = $this->Hrm_model->weekly_tax_info($data['employee_data'][0]['employee_tax'],$final,$weekly_tax[0][$emp_tax]);
+   $weekly_range = $weekly_tax[0][$emp_tax];
+   $split_values = explode('-', $weekly_range);
+   $firstValue = $split_values[0];  
+   $secondValue = $split_values[1];  
+   $getvalue = $minValue - $firstValue;
+   $w_tax='';
+   $data['weekly'] = $this->Hrm_model->weekly_tax_info($data['employee_data'][0]['employee_tax'],$final,$weekly_range);
    if(!empty($data['weekly'][0]['employee'])){
-   $addamt = explode('$', $data['weekly'][0]['details']);
+   $weekly_employee_details= $data['weekly'][0]['details'];
+   $addamt = explode('$', $weekly_employee_details);
    $weekly_employee= $data['weekly'][0]['employee'];
    $wkly=($weekly_employee/100)*$getvalue;
-   $wkly= round($wkly);
+   $wkly= round($wkly, 2);
    $weekly_tax= $addamt[0] + $wkly; 
+  //  print_r('weekly -'.$weekly_tax); die();
 }
 }
 }
@@ -2314,7 +2339,7 @@ if($data['employee_data'][0]['payroll_type'] == 'Hourly'){
   $firstValue = $split_values[0];  
   $secondValue = $split_values[1];  
   $getvalue = $minValue - $firstValue;
-  
+  $w_tax='';
   $data['biweekly'] = $this->Hrm_model->biweekly_tax_info($data['employee_data'][0]['employee_tax'],$final,$biweekly_range);
   if(!empty($data['biweekly'][0]['employee'])){
   $biweekly_employee_details= $data['biweekly'][0]['details'];
@@ -2347,7 +2372,7 @@ else   {
   $firstValue = $split_values[0];  
   $secondValue = $split_values[1];  
   $getvalue = $minValue - $firstValue;
-   
+   $w_tax='';
   $data['monthly'] = $this->Hrm_model->monthly_tax_info($data['employee_data'][0]['employee_tax'],$final,$monthly_range);
   if(!empty($data['monthly'][0]['employee'])){
     $monthy_employee_details= $data['monthly'][0]['details'];
@@ -3137,7 +3162,6 @@ $data['job_title']='Sales Partner';
         $this->session->set_flashdata('message', display('save_successfully'));
        redirect("Chrm/manage_timesheet");
 }
-
 
 
 
@@ -4904,7 +4928,7 @@ if (!$result) {
         $secondValue = $split_values[1];  
         $getvalue = (float)$minValue - (float)$firstValue;
         // print_r($getvalue);  
-       
+       $w_tax='';
        $data['weekly'] = $this->Hrm_model->weekly_tax_info($data['employee_data'][0]['employee_tax'],$final,$weekly_range);
        if(!empty($data['weekly'][0]['employee'])){
         $weekly_employee_details= $data['weekly'][0]['details'];
@@ -5299,7 +5323,6 @@ $data2 = array(
 
 
 
-
     public function expense_list()
     { 
       $this->load->model('Hrm_model');
@@ -5531,35 +5554,50 @@ $data['setting_detail'] = $setting_detail;
      ->where('tax',$query['tax'])
      ->where('create_by',$this->session->userdata('user_id') )
      ->get()->result_array();
- 
       $get_tax_name = $this->db->select("tax")
         ->from('weekly_tax_info')
-        ->where('tax',$query['tax'])
+        ->where('tax','Weekly '.$query['tax'])
         ->where('create_by',$this->session->userdata('user_id') )
         ->get()
         ->result_array();
+     $weekly_tax = 'Weekly';
+     $data['trimmed_tax']    = str_replace($weekly_tax, '', $get_tax_name[0]['tax']);
     $data['weekly_taxinfo'] = $this->db->select("*")
     ->from('weekly_tax_info')
     ->where('tax', $get_tax_name[0]['tax'] )
     ->where('create_by',$this->session->userdata('user_id') )
     ->get()
     ->result_array();
-    $data['biweekly_taxinfo'] = $this->db->select("*")
+    $get_tax_name_biweekly = $this->db->select("tax")
     ->from('biweekly_tax_info')
-    ->where('tax', $query['tax'] )
     ->where('create_by',$this->session->userdata('user_id') )
     ->get()
     ->result_array();
- $data['monthly_taxinfo'] = $this->db->select("*")
+    $biweekly_tax = 'BIWeekly';
+    $data['trimmed_tax_bi']    = str_replace($biweekly_tax, '', $get_tax_name_biweekly[0]['tax']);
+    $data['biweekly_taxinfo'] = $this->db->select("*")
+    ->from('biweekly_tax_info')
+    ->where('tax', $get_tax_name_biweekly[0]['tax'] )
+    ->where('create_by',$this->session->userdata('user_id') )
+    ->get()
+    ->result_array();
+    $get_tax_name_monthly = $this->db->select("tax")
     ->from('monthly_tax_info')
-    ->where('tax', $query['tax'])
+    ->where('create_by',$this->session->userdata('user_id') )
+    ->get()
+    ->result_array();
+    $monthly_tax = 'Monthly';
+    $data['trimmed_tax_monly']    = str_replace($monthly_tax, '', $get_tax_name_monthly[0]['tax']);
+    $data['monthly_taxinfo'] = $this->db->select("*")
+    ->from('monthly_tax_info')
+    ->where('tax', $get_tax_name_monthly[0]['tax'] )
     ->where('create_by',$this->session->userdata('user_id') )
     ->get()
     ->result_array();
     $data['title'] = display('add_taxes_detail');
     $content = $this->parser->parse('hr/add_state_tax_detail', $data, true);
     $this->template->full_admin_html_view($content);
-
+    // echo json_encode($data);
     }
    public function add_taxes_detail() {
        $CI = & get_instance();
@@ -5568,7 +5606,9 @@ $data['setting_detail'] = $setting_detail;
 $data['setting_detail'] = $setting_detail;
      $tax = $this->input->post('tax');
     $data['taxinfo'] = $this->db->select("*")->from('federal_tax')->where('tax','Federal Income tax')->where('created_by',$this->session->userdata('user_id'))->get()->result_array();
-  
+    // $data['taxinfo'] = $this->db->select("*")->from('federal_tax')->where('tax',$tax)->get()->result_array();
+    // print_r($data['taxinfo']); .;
+    // echo $this->db->last_query(); .;
     $data['title'] = display('add_taxes_detail');
     $content = $this->parser->parse('hr/add_taxes_detail', $data, true);
     $this->template->full_admin_html_view($content);
