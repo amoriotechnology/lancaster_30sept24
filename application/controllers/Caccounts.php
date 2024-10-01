@@ -283,10 +283,14 @@ if ($this->db->field_exists($txd, 'quotation_taxinfo')) {
     // ================ Income tax entry   ======
    
     public function create_tax_setup(){
-      $tname = $this->input->post('tax_name',TRUE);
-      echo $tname;
-       $tax_name= str_replace("_"," ",$tname);
-       echo $tax_name;
+        $type=$_GET['type'];
+     
+      
+        $tname = $this->input->post('tax_name',TRUE);
+       
+        $tax_name= str_replace("_"," ",$tname);
+       
+ // die();
         $year = date("Y");
         $start_amount = $this->input->post('employer',TRUE);
         $end_amount = $this->input->post('employee',TRUE);
@@ -300,10 +304,22 @@ if ($this->db->field_exists($txd, 'quotation_taxinfo')) {
         $head_household_from = $this->input->post('head_household_from',TRUE);
         $head_household_to = $this->input->post('head_household_to',TRUE);
                $this->db->where('tax',$tax_name);
-                //   echo $this->db->last_query(); die();
-         $this->db->delete('state_localtax');
-         echo $this->db->last_query();
-       for ($i = 0, $n = count($details); $i < $n; $i++) {
+              if($type == 'hourly'){
+       $this->db->delete('state_localtax');
+        }else if($type == 'weekly'){
+            $this->db->delete('weekly_tax_info');
+       
+        }else if($type == 'biweekly'){
+             $this->db->delete('biweekly_tax_info');
+        
+        }else if($type == 'monthly'){
+             $this->db->delete('monthly_tax_info');
+
+        }
+       // echo $this->db->last_query();//die();
+             
+       for ($i = 0, $n = count($details); $i < $n; $i++) 
+       {
             $samount = $start_amount[$i];
             $eamount = $end_amount[$i];
             $arate = $details[$i];
@@ -327,10 +343,19 @@ if ($this->db->field_exists($txd, 'quotation_taxinfo')) {
                 'tax'  =>$tax_name,
               'create_by' => $this->session->userdata('user_id')
         );
-        //   print_r($data1);
+        if($type == 'hourly'){
          $this->db->insert('state_localtax', $data1);
-          echo $this->db->last_query();
-            }
+        }else if($type == 'weekly'){
+         $this->db->insert('weekly_tax_info', $data1);
+        }else if($type == 'biweekly'){
+         $this->db->insert('biweekly_tax_info', $data1);
+        }else if($type == 'monthly'){
+         $this->db->insert('monthly_tax_info', $data1);
+        }
+     // echo $this->db->last_query();
+        }//die();
+          //  weekly_tax_info
+
             $this->session->set_flashdata('message', display('save_successfully'));
             redirect("Chrm/payroll_setting");
             if (empty($data1)) {

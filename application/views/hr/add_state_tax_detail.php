@@ -172,7 +172,7 @@
                <br>
 
  
- <?php  if(trim($taxinfo[0]['tax']) == trim($trimmed_tax))   { ?>
+ <?php  if(!empty($weekly_taxinfo))   { ?>
 
     
       <div class="  row">
@@ -191,9 +191,9 @@
 
  
       <div class="panel-body">
-                  <?php echo  form_open('Caccounts/weekly_create_tax_setup?type=weekly') ?>
+                  <?php echo  form_open('Caccounts/create_tax_setup?type=weekly') ?>
                   <input type="hidden" class="txt_csrfname" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
-                  <input type="hidden" name="tax_name" value="Weekly <?php echo $_GET['tax']; ?>"/>
+                  <input type="hidden" name="tax_name" value="<?php echo $_GET['tax']; ?>"/>
                   <table class="table table-bordered table-hover"   id="POITable11"  border="0">
                      <thead> 
                         <tr class="btnclr">
@@ -305,7 +305,7 @@
 </div>                
  
 <div class="panel-body">
-                  <?php echo  form_open('Caccounts/biweekly_create_tax_setup?type=biweekly') ?>
+                  <?php echo  form_open('Caccounts/create_tax_setup?type=biweekly') ?>
                   <input type="hidden" class="txt_csrfname" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                   <input type="hidden" name="tax_name" value="BIWeekly <?php echo $_GET['tax']; ?>"/>
                   <table class="table table-bordered table-hover"   id="POITable22"  border="0">
@@ -420,7 +420,7 @@
 
 
 <div class="panel-body">
-                  <?php echo  form_open('Caccounts/monthly_create_tax_setup?type=monthly') ?>
+                  <?php echo  form_open('Caccounts/create_tax_setup?type=monthly') ?>
                   <input type="hidden" class="txt_csrfname" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                   <input type="hidden" name="tax_name" value="Monthly <?php echo $_GET['tax']; ?>"/>
                   <table class="table table-bordered table-hover"   id="POITable33"  border="0">
