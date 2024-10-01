@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 ERROR - 2024-10-01 04:45:36 --> $config['composer_autoload'] is set to TRUE but D:\wamp\www\lancaster\lancaster_30sept24\application\vendor/autoload.php was not found.
@@ -3832,3 +3833,5 @@ INFO - 2024-10-01 06:12:01 --> CSRF cookie sent
 INFO - 2024-10-01 06:12:01 --> Input Class Initialized
 INFO - 2024-10-01 06:12:01 --> Language Class Initialized
 ERROR - 2024-10-01 06:12:01 --> 404 Page Not Found: Assets/js
+=======
+>>>>>>> be0951f5935bdf36be32ff29049b3023a59c5de0
