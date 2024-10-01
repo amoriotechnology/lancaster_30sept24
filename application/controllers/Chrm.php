@@ -5574,10 +5574,10 @@ $data['setting_detail'] = $setting_detail;
     ->get()
     ->result_array();
     $biweekly_tax = 'BIWeekly';
-    $data['trimmed_tax_bi']    = str_replace($biweekly_tax, '', $get_tax_name_biweekly[0]['tax']);
+    $data['trimmed_tax_bi']    = str_replace($biweekly_tax, '', $query['tax']);
     $data['biweekly_taxinfo'] = $this->db->select("*")
     ->from('biweekly_tax_info')
-    ->where('tax', $get_tax_name_biweekly[0]['tax'] )
+    ->where('tax', 'BIWeekly '.$query['tax'] )
     ->where('create_by',$this->session->userdata('user_id') )
     ->get()
     ->result_array();
@@ -5587,10 +5587,10 @@ $data['setting_detail'] = $setting_detail;
     ->get()
     ->result_array();
     $monthly_tax = 'Monthly';
-    $data['trimmed_tax_monly']    = str_replace($monthly_tax, '', $get_tax_name_monthly[0]['tax']);
+    $data['trimmed_tax_monly']    = str_replace($monthly_tax, '', $query['tax']);
     $data['monthly_taxinfo'] = $this->db->select("*")
     ->from('monthly_tax_info')
-    ->where('tax', $get_tax_name_monthly[0]['tax'] )
+    ->where('tax', 'Monthly '.$query['tax'] )
     ->where('create_by',$this->session->userdata('user_id') )
     ->get()
     ->result_array();
