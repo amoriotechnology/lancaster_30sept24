@@ -274,7 +274,7 @@
             <div class=" panel panel-default" style="border:3px solid #d7d4d6;margin-left: 15px;width: 1602px;" >
                <div class="panel-body btnclr ">
                   <div class="row">
-                     <h3 class="col-sm-3" style="margin: 0;">BiWEEKLY PAYROLL</h3>
+                     <h3 class="col-sm-3" style="margin: 0;">BIWEEKLY PAYROLL</h3>
                      <div class="col-sm-9 text-right">                    
                      </div>
                   </div>

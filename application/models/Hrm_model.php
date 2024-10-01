@@ -2739,7 +2739,7 @@ public function get_taxname_living_weekly($lst_name){
     $this->db->select('tax');
     $this->db->from('weekly_tax_info');
     $this->db->where('create_by', $user_id); 
-    $this->db->like('tax', 'Weekly '.$lst_name, 'after'); 
+    $this->db->like('tax', $lst_name); 
     $query = $this->db->get();
     if ($query->num_rows() > 0) {
         return $query->result_array();
