@@ -5579,11 +5579,8 @@ $data['setting_detail'] = $setting_detail;
     ->result_array();
     $get_tax_name_monthly = $this->db->select("tax")
     ->from('monthly_tax_info')
-<<<<<<< HEAD
     ->where('tax', $query['tax'])
     ->where('create_by',$this->session->userdata('user_id'))
-=======
-    ->where('create_by',$this->session->userdata('user_id') )
     ->get()
     ->result_array();
     $monthly_tax = 'Monthly';
@@ -5592,7 +5589,6 @@ $data['setting_detail'] = $setting_detail;
     ->from('monthly_tax_info')
     ->where('tax', $get_tax_name_monthly[0]['tax'] )
     ->where('create_by',$this->session->userdata('user_id') )
->>>>>>> 54f123560c8f074e1ec82d431355f97209a5e24a
     ->get()
     ->result_array();
 
