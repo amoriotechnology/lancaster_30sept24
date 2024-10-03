@@ -5262,59 +5262,66 @@ $data2 = array(
        $content = $this->parser->parse('hr/expense_list', $data, true);
        $this->template->full_admin_html_view($content);
     }
-public function pay_slip_list() {
-        $data['title'] = display('pay_slip_list');
-        $this->load->model('Hrm_model');
-        $CI = & get_instance();
-        $CI->load->model('Web_settings');
-        $setting_detail = $CI->Web_settings->retrieve_setting_editdata();
-        $datainfo = $this->Hrm_model->get_data_payslip();
-        $data=array(
-            'dataforpayslip' => $datainfo,
-            'setting_detail' => $setting_detail,
-        );
-        $data['employee_data'] =$this->Hrm_model->employee_data_get();
-        $content = $this->parser->parse('hr/pay_slip_list', $data, true);
-        $this->template->full_admin_html_view($content);
-    }
-    public function payslipIndexData() {
-      $limit          = $this->input->post("length");
-      $start          = $this->input->post("start");
-      $search         = $this->input->post("search")["value"];
-      $orderField     = $this->input->post("columns")[$this->input->post("order")[0]["column"]]["data"];
-      $orderDirection = $this->input->post("order")[0]["dir"];
-      $date           = $this->input->post("payslip_date_search");
-      $emp_name       = $this->input->post('employee_name');
-      $items          = $this->Hrm_model->getPaginatedpayslip($limit,$start,$orderField,$orderDirection,$search,$date,$emp_name);
-      $totalItems     = $this->Hrm_model->getTotalpayslip($search,$date,$emp_name);
-      $data           = [];
-      $i              = $start + 1;
-      $edit           = "";
-      $delete         = "";
-      foreach ($items as $item) {
-          $row = [
-              'table_id'      => $i,
-              "first_name"    => $item["first_name"] .' '. $item["middle_name"].' '. $item["last_name"],
-              "job_title"  => $item["job_title"],
-              "month"         => $item["month"],
-              "total_hours" => (!empty($item['total_hours']) ? $item['total_hours'] : 0),
-              "tot_amt"   => (!empty($item['extra_this_hour']) ? ($item['above_extra_sum'] + $item['extra_thisrate']) : $item['above_extra_sum']),
-              "overtime"   => !empty($item['extra_this_hour']) ? $item['extra_this_hour'] : '0',
-              "sales_comm" => $item['sales_c_amount'],
-              "action" => "<a href='".base_url('Chrm/time_list/'.$item['timesheet_id'].'/'.$item['templ_name'])."' class='btnclr btn btn-success btn-sm'> <i class='fa fa-window-restore'></i> </a>",
-          ];
-          $data[] = $row;
-          $i++;
-      }
-      $i = ($i - 1);
-      $response = [
-          "draw"            => $this->input->post("draw"),
-          "recordsTotal"    => $totalItems,
-          "recordsFiltered" => $totalItems,
-          "data"            => $data,
+
+
+// Genarate Payslip Index - Yokesh
+public function pay_slip_list() 
+{
+    $data['title'] = display('pay_slip_list');
+    $this->load->model('Hrm_model');
+    $CI = & get_instance();
+    $CI->load->model('Web_settings');
+    $setting_detail = $CI->Web_settings->retrieve_setting_editdata();
+    $datainfo = $this->Hrm_model->get_data_payslip();
+    $data=array(
+        'dataforpayslip' => $datainfo,
+        'setting_detail' => $setting_detail,
+    );
+    $data['employee_data'] =$this->Hrm_model->employee_data_get();
+    $content = $this->parser->parse('hr/pay_slip_list', $data, true);
+    $this->template->full_admin_html_view($content);
+}
+
+// Genarate Payslip - Yokesh
+public function payslipIndexData() 
+{
+  $limit          = $this->input->post("length");
+  $start          = $this->input->post("start");
+  $search         = $this->input->post("search")["value"];
+  $orderField     = $this->input->post("columns")[$this->input->post("order")[1]["column"]]["data"];
+  $orderDirection = $this->input->post("order")[0]["dir"];
+  $date           = $this->input->post("payslip_date_search");
+  $emp_name       = $this->input->post('employee_name');
+  $items          = $this->Hrm_model->getPaginatedpayslip($limit,$start,$orderField,$orderDirection,$search,$date,$emp_name);
+  $totalItems     = $this->Hrm_model->getTotalpayslip($search,$date,$emp_name);
+  $data           = [];
+  $i              = $start + 1;
+  $edit           = "";
+  $delete         = "";
+  foreach ($items as $item) {
+      $row = [
+          'table_id'      => $i,
+          "first_name"    => $item["first_name"] .' '. $item["middle_name"].' '. $item["last_name"],
+          "job_title"  => $item["job_title"],
+          "month"         => $item["month"],
+          "total_hours" => (!empty($item['total_hours']) ? $item['total_hours'] : 0),
+          "tot_amt"   => (!empty($item['extra_this_hour']) ? ($item['above_extra_sum'] + $item['extra_thisrate']) : $item['above_extra_sum']),
+          "overtime"   => !empty($item['extra_this_hour']) ? $item['extra_this_hour'] : '0',
+          "sales_comm" => $item['sales_c_amount'],
+          "action" => "<a href='".base_url('Chrm/time_list/'.$item['timesheet_id'].'/'.$item['templ_name'])."' class='btnclr btn btn-success btn-sm'> <i class='fa fa-window-restore'></i> </a>",
       ];
-      echo json_encode($response);
+      $data[] = $row;
+      $i++;
   }
+ 
+  $response = [
+      "draw"            => $this->input->post("draw"),
+      "recordsTotal"    => $totalItems,
+      "recordsFiltered" => $totalItems,
+      "data"            => $data,
+  ];
+  echo json_encode($response);
+}
    public function  payroll_reports() {
       $this->load->model('Hrm_model');
       $CI = & get_instance();

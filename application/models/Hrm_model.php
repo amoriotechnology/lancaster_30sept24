@@ -2670,6 +2670,8 @@ public function biweekly_tax_info($employee_status,$final,$biweekly_range){
     }
      return true;
 }
+
+// Generate Payslip - Yokesh
 public function getPaginatedpayslip($limit, $offset, $orderField, $orderDirection, $search, $date = null, $emp_name = 'All')
     {
         $this->db->select('a.*,b.*,c.*');
@@ -2709,7 +2711,7 @@ public function getPaginatedpayslip($limit, $offset, $orderField, $orderDirectio
         }
         return $query->result_array();
     }
-    // Total Paysilp
+    // Total Payslip -Yokesh
     public function getTotalpayslip($search, $date, $emp_name = 'All')
     {
         $this->db->select('a.*,b.*,c.*');
