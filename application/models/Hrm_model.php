@@ -2679,11 +2679,16 @@ public function getPaginatedpayslip($limit, $offset, $orderField, $orderDirectio
             $dates = explode(' to ', $date);
             $start_date = $dates[0];
             $end_date = $dates[1];
-            $subquery .= " AND (a.cheque_date BETWEEN '$start_date' AND '$end_date')";
+            $this->db->where('a.cheque_date >=', $start_date);
+            $this->db->where('a.cheque_date <=', $end_date);
+            $this->db->where("a.cheque_date BETWEEN '$start_date' AND '$end_date'");
         }
         if ($emp_name !== 'All') {
             $trimmed_emp_name = trim($emp_name);
-            $subquery .= " AND (TRIM(CONCAT_WS(' ', b.first_name, b.middle_name, b.last_name)) LIKE '%$trimmed_emp_name%' OR TRIM(CONCAT_WS(' ', b.first_name, b.last_name)) LIKE '%$trimmed_emp_name%')";
+            $this->db->group_start();
+            $this->db->like("TRIM(CONCAT_WS(' ', b.first_name, b.middle_name, b.last_name))", $trimmed_emp_name);
+            $this->db->or_like("TRIM(CONCAT_WS(' ', b.first_name, b.last_name))", $trimmed_emp_name);
+            $this->db->group_end();
         }
         $this->db->from('timesheet_info a');
         $this->db->join('employee_history b' , 'a.templ_name = b.id');
@@ -2706,6 +2711,7 @@ public function getPaginatedpayslip($limit, $offset, $orderField, $orderDirectio
         $this->db->limit($limit, $offset);
         $this->db->order_by($orderField, $orderDirection);
         $query = $this->db->get();
+        // echo $this->db->last_query(); die;
         if ($query === false) {
             return false;
         }
@@ -2719,11 +2725,16 @@ public function getPaginatedpayslip($limit, $offset, $orderField, $orderDirectio
             $dates = explode(' to ', $date);
             $start_date = $dates[0];
             $end_date = $dates[1];
-            $subquery .= " AND (a.cheque_date BETWEEN '$start_date' AND '$end_date')";
+            $this->db->where('a.cheque_date >=', $start_date);
+            $this->db->where('a.cheque_date <=', $end_date);
+            $this->db->where("a.cheque_date BETWEEN '$start_date' AND '$end_date'");
         }
         if ($emp_name !== 'All') {
             $trimmed_emp_name = trim($emp_name);
-            $subquery .= " AND (TRIM(CONCAT_WS(' ', b.first_name, b.middle_name, b.last_name)) LIKE '%$trimmed_emp_name%' OR TRIM(CONCAT_WS(' ', b.first_name, b.last_name)) LIKE '%$trimmed_emp_name%')";
+            $this->db->group_start();
+            $this->db->like("TRIM(CONCAT_WS(' ', b.first_name, b.middle_name, b.last_name))", $trimmed_emp_name);
+            $this->db->or_like("TRIM(CONCAT_WS(' ', b.first_name, b.last_name))", $trimmed_emp_name);
+            $this->db->group_end();
         }
         $this->db->from('timesheet_info a');
         $this->db->join('employee_history b' , 'a.templ_name = b.id');
