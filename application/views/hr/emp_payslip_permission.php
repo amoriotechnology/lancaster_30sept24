@@ -1367,10 +1367,12 @@ function convertToTime(hr,min) {
 }
 $(function() {
     $("#datepicker").datepicker({
-        dateFormat: 'mm-dd-yy'
+        dateFormat: 'mm-dd-yy',
+	maxDate: 0
     });
     $("#datepicker_cheque").datepicker({
-        dateFormat: 'mm-dd-yy'
+        dateFormat: 'mm-dd-yy',
+	maxDate: 0
     });
 });
 </script>
